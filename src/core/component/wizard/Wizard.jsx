@@ -4,6 +4,8 @@ import RecieverAddress from './../../../features/shipping-label-maker/RecieverAd
 import Weight from './../../../features/shipping-label-maker/Weight';
 import ShippingOption from './../../../features/shipping-label-maker/ShippingOption';
 import Confirm from './../../../features/shipping-label-maker/Confirm'
+import  { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
 export default class Wizard extends Component {
 
     steps = 1;
@@ -123,6 +125,7 @@ export default class Wizard extends Component {
 
         return (
             <div>
+                <Link to="/">Home</Link>
             <h1>Shipping Label Maker </h1>
             
                 {widget}

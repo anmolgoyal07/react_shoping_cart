@@ -5,7 +5,9 @@ import './App.css';
 import shippingLabelMakerReducer from './reducers'
 import { createStore, applyMiddleware } from 'redux'
 import ShippingDetailsRedux from './containers/shippingDetailsRedux.jsx'
+import Route from './core/router.jsx'
 import { Provider } from 'react-redux'
+
 const store = createStore(shippingLabelMakerReducer);
 
 class App extends Component {
@@ -13,7 +15,7 @@ class App extends Component {
     return (
       <div>
          <Provider store={ store }>
-        <ShippingDetailsRedux></ShippingDetailsRedux>
+        <Route></Route>
         </Provider>
         </div>
     );
