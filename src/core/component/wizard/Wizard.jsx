@@ -9,101 +9,110 @@ export default class Wizard extends Component {
     steps = 1;
     constructor(props){
         super(props);
+        this.state = {
+            shippingDetail : this.props.shippingDetail,
+            steps : this.props.steps
+        }
         this.goBack = this.goBack.bind(this);
         this.goNext = this.goNext.bind(this);
-        this.state = {steps:this.steps};
+        this.onUpdate = this.onUpdate.bind(this);
+        
     }
 
-    shippingDetails = {
-
-        'from': {
-            'name': "",
-            'street': "",
-            'city': "",
-            'state': "",
-            'zip': ""
-        },
-        'to': {
-            'name': "",
-            'street': "",
-            'city': "",
-            'state': "",
-            'zip': ""
-        },
-        'weight': 0,
-        'shippingOption':"" ,
-        'price':0
+    componentDidMount(){
+        this.setState({shippingDetail:Object.assign({},this.props.shippingDetail)
+        ,steps:this.props.steps
+    })
     }
 
-    
-    screens = {
-        1:'SENDER',
-        2:'RECEIVER',
-        3:'WEIGHT',
-        4:'SHIPPING',
+    onUpdate() {
+        this.props.actions.setShippingDetail(this.state.shippingDetail)
+        
+     }
 
-    }
-
-    renderSenderComponent(){
-
-    }
     goBack(data){
-        if(this.steps===1){
-            this.shippingDetails.from = data;
-        } else if(this.steps ===2){
-            this.shippingDetails.to = data;
-        } else if (this.steps === 3){
-            this.shippingDetails.weight = data;
-        } else if (this.steps === 4){
-            this.shippingDetails.shippingOption = data.shippingOption;
-            this.shippingDetails.price = data.price;
+        if(this.state.steps===1){
+            
+            this.setState({shippingDetail:Object.assign({},this.state.shippingDetail,{from:data})});
+           
+        } else if(this.state.steps ===2){
+            this.setState({shippingDetail:Object.assign({},this.state.shippingDetail,{to:data})})
+           // this.shippingDetail.to = data;
+        } else if (this.state.steps === 3){
+            this.setState({shippingDetail:Object.assign({},this.state.shippingDetail,{weight:data})})
+            //this.shippingDetail.weight = data;
+        } else if (this.state.steps === 4){
+            this.setState({shippingDetail:Object.assign({},this.state.shippingDetail,
+                {
+                    shippingOption:data.shippingOption ,
+                    price:data.price
+                }
+            )});
+           // this.shippingDetail.shippingOption = data.shippingOption;
+           // this.shippingDetail.price = data.price;
         }
-        this.steps = this.steps - 1;
-        this.setState( {steps:this.steps});
+        this.onUpdate();
+        this.setState({steps : this.state.steps-1},function(){
+            this.props.actions.setSteps(this.state.steps);
+        })
+      //  this.steps = this.steps - 1;
+       // this.setState( {steps:this.steps});
     }
     goNext(data){
-        if(this.steps===1){
-            this.shippingDetails.from = data;
-        } else if(this.steps ===2){
-            this.shippingDetails.to = data;
-        } else if (this.steps === 3){
-            this.shippingDetails.weight = data;
-        } else if (this.steps === 4){
-            this.shippingDetails.shippingOption = data.shippingOption;
-            this.shippingDetails.price = data.price;
+        if(this.state.steps===1){
+            this.setState({shippingDetail:Object.assign({},this.state.shippingDetail,{from:data})});
+           
+        } else if(this.state.steps ===2){
+            this.setState({shippingDetail:Object.assign({},this.state.shippingDetail,{to:data})})
+
+        } else if (this.state.steps === 3){
+            this.setState({shippingDetail:Object.assign({},this.state.shippingDetail,{weight:data})})
+            //this.shippingDetail.weight = data;
+        } else if (this.state.steps === 4){
+            this.setState({shippingDetail:Object.assign({},this.state.shippingDetail,
+                {
+                    shippingOption:data.shippingOption ,
+                    price:data.price
+                }
+            )});
+            //this.shippingDetail.shippingOption = data.shippingOption;
+            //this.shippingDetail.price = data.price;
         }
-        this.steps = this.steps + 1;
-        this.setState({steps:this.steps});
+        this.onUpdate();
+        this.setState({steps : this.state.steps+1},function(){
+            this.props.actions.setSteps(this.state.steps);
+        })
+        
     }
 
     render(){
         let widget ='';
-        switch(this.steps){
+        switch(this.state.steps){
             case 1:
-            widget=<SenderAddress name={this.shippingDetails.from.name} street={this.shippingDetails.from.street}
-            city={this.shippingDetails.from.city} state={this.shippingDetails.from.state} zip={this.shippingDetails.from.zip}
-            goBack={this.goBack} goNext={this.goNext} steps={this.steps}></SenderAddress>;
+            widget=<SenderAddress name={this.state.shippingDetail.from.name} street={this.state.shippingDetail.from.street}
+            city={this.state.shippingDetail.from.city} state={this.state.shippingDetail.from.state} zip={this.state.shippingDetail.from.zip}
+            goBack={this.goBack} goNext={this.goNext} steps={this.state.steps}></SenderAddress>;
             break;
 
             case 2:
             widget=<RecieverAddress
-            name={this.shippingDetails.to.name} street={this.shippingDetails.to.street}
-            city={this.shippingDetails.to.city} state={this.shippingDetails.to.state} zip={this.shippingDetails.to.zip}
-            goBack={this.goBack} goNext={this.goNext} steps={this.steps}></RecieverAddress>;
+            name={this.state.shippingDetail.to.name} street={this.state.shippingDetail.to.street}
+            city={this.state.shippingDetail.to.city} state={this.state.shippingDetail.to.state} zip={this.state.shippingDetail.to.zip}
+            goBack={this.goBack} goNext={this.goNext} steps={this.state.steps}></RecieverAddress>;
             break;
             
             case 3:
-            widget = <Weight weight={this.shippingDetails.weight}  goBack={this.goBack} goNext={this.goNext} steps={this.steps}>
+            widget = <Weight weight={this.state.shippingDetail.weight}  goBack={this.goBack} goNext={this.goNext} steps={this.state.steps}>
             </Weight>
             break;
 
             case 4:
-            widget = <ShippingOption shippingOption={this.shippingDetails.shippingOption} weight={this.shippingDetails.weight}  goBack={this.goBack} goNext={this.goNext} steps={this.steps}>
+            widget = <ShippingOption shippingOption={this.state.shippingDetail.shippingOption} weight={this.state.shippingDetail.weight}  goBack={this.goBack} goNext={this.goNext} steps={this.state.steps}>
             </ShippingOption>
             break;
 
             case 5:
-            widget = <Confirm shippingDetails={this.shippingDetails}  goBack={this.goBack} goNext={this.goNext}></Confirm>
+            widget = <Confirm shippingDetail={this.state.shippingDetail}  goBack={this.goBack} goNext={this.goNext}></Confirm>
             break;
 
             case 6:
